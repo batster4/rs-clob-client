@@ -1,6 +1,6 @@
 //! Request types for CTF operations.
 
-use alloy::primitives::{FixedBytes, U256};
+use alloy::primitives::{B256, U256};
 use bon::Builder;
 
 use crate::types::Address;
@@ -14,7 +14,7 @@ pub struct ConditionIdRequest {
     /// The oracle address that will report the outcome
     pub oracle: Address,
     /// Hash of the question being resolved
-    pub question_id: FixedBytes<32>,
+    pub question_id: B256,
     /// Number of outcome slots (typically 2 for binary markets)
     pub outcome_slot_count: U256,
 }
@@ -26,9 +26,9 @@ pub struct ConditionIdRequest {
 #[derive(Debug, Clone, Builder)]
 pub struct CollectionIdRequest {
     /// Parent collection ID (typically zero for top-level positions)
-    pub parent_collection_id: FixedBytes<32>,
+    pub parent_collection_id: B256,
     /// The condition ID
-    pub condition_id: FixedBytes<32>,
+    pub condition_id: B256,
     /// Index set representing outcome slots (e.g., 0b01 = 1, 0b10 = 2)
     pub index_set: U256,
 }
@@ -42,7 +42,7 @@ pub struct PositionIdRequest {
     /// The collateral token address (e.g., USDC)
     pub collateral_token: Address,
     /// The collection ID
-    pub collection_id: FixedBytes<32>,
+    pub collection_id: B256,
 }
 
 /// Request to split collateral into outcome tokens.
@@ -54,10 +54,10 @@ pub struct SplitPositionRequest {
     /// The collateral token address (e.g., USDC)
     pub collateral_token: Address,
     /// Parent collection ID (typically zero for Polymarket)
-    #[builder(default = FixedBytes::<32>::ZERO)]
-    pub parent_collection_id: FixedBytes<32>,
+    #[builder(default)]
+    pub parent_collection_id: B256,
     /// The condition ID to split on
-    pub condition_id: FixedBytes<32>,
+    pub condition_id: B256,
     /// Array of disjoint index sets representing outcome slots.
     /// For binary markets: [1, 2] where 1 = 0b01 (YES) and 2 = 0b10 (NO)
     pub partition: Vec<U256>,
@@ -74,10 +74,10 @@ pub struct MergePositionsRequest {
     /// The collateral token address (e.g., USDC)
     pub collateral_token: Address,
     /// Parent collection ID (typically zero for Polymarket)
-    #[builder(default = FixedBytes::<32>::ZERO)]
-    pub parent_collection_id: FixedBytes<32>,
+    #[builder(default)]
+    pub parent_collection_id: B256,
     /// The condition ID to merge on
-    pub condition_id: FixedBytes<32>,
+    pub condition_id: B256,
     /// Array of disjoint index sets representing outcome slots.
     /// For binary markets: [1, 2] where 1 = 0b01 (YES) and 2 = 0b10 (NO)
     pub partition: Vec<U256>,
@@ -94,10 +94,10 @@ pub struct RedeemPositionsRequest {
     /// The collateral token address (e.g., USDC)
     pub collateral_token: Address,
     /// Parent collection ID (typically zero for Polymarket)
-    #[builder(default = FixedBytes::<32>::ZERO)]
-    pub parent_collection_id: FixedBytes<32>,
+    #[builder(default)]
+    pub parent_collection_id: B256,
     /// The condition ID to redeem
-    pub condition_id: FixedBytes<32>,
+    pub condition_id: B256,
     /// Array of disjoint index sets representing outcome slots to redeem
     pub index_sets: Vec<U256>,
 }

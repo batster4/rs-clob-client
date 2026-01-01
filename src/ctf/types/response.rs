@@ -1,13 +1,13 @@
 //! Response types for CTF operations.
 
-use alloy::primitives::{FixedBytes, U256};
+use alloy::primitives::{B256, U256};
 
 /// Response from calculating a condition ID.
 #[non_exhaustive]
 #[derive(Debug, Clone)]
 pub struct ConditionIdResponse {
     /// The calculated condition ID
-    pub condition_id: FixedBytes<32>,
+    pub condition_id: B256,
 }
 
 /// Response from calculating a collection ID.
@@ -15,7 +15,7 @@ pub struct ConditionIdResponse {
 #[derive(Debug, Clone)]
 pub struct CollectionIdResponse {
     /// The calculated collection ID
-    pub collection_id: FixedBytes<32>,
+    pub collection_id: B256,
 }
 
 /// Response from calculating a position ID.
@@ -31,7 +31,7 @@ pub struct PositionIdResponse {
 #[derive(Debug, Clone)]
 pub struct SplitPositionResponse {
     /// Transaction hash
-    pub transaction_hash: FixedBytes<32>,
+    pub transaction_hash: B256,
     /// Block number where the transaction was mined
     pub block_number: u64,
 }
@@ -41,7 +41,7 @@ pub struct SplitPositionResponse {
 #[derive(Debug, Clone)]
 pub struct MergePositionsResponse {
     /// Transaction hash
-    pub transaction_hash: FixedBytes<32>,
+    pub transaction_hash: B256,
     /// Block number where the transaction was mined
     pub block_number: u64,
 }
@@ -51,7 +51,7 @@ pub struct MergePositionsResponse {
 #[derive(Debug, Clone)]
 pub struct RedeemPositionsResponse {
     /// Transaction hash
-    pub transaction_hash: FixedBytes<32>,
+    pub transaction_hash: B256,
     /// Block number where the transaction was mined
     pub block_number: u64,
 }

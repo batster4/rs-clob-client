@@ -142,8 +142,7 @@ impl<P: Provider + Clone> Client<P> {
             ))
         })?;
 
-        let contract =
-            IConditionalTokens::new(config.conditional_tokens.0.0.into(), provider.clone());
+        let contract = IConditionalTokens::new(config.conditional_tokens, provider.clone());
 
         Ok(Self { contract, provider })
     }
@@ -167,7 +166,7 @@ impl<P: Provider + Clone> Client<P> {
         let condition_id = self
             .contract
             .getConditionId(
-                request.oracle.0.0.into(),
+                request.oracle,
                 request.question_id,
                 request.outcome_slot_count,
             )
@@ -228,7 +227,7 @@ impl<P: Provider + Clone> Client<P> {
     pub async fn position_id(&self, request: &PositionIdRequest) -> Result<PositionIdResponse> {
         let position_id = self
             .contract
-            .getPositionId(request.collateral_token.0.0.into(), request.collection_id)
+            .getPositionId(request.collateral_token, request.collection_id)
             .call()
             .await
             .map_err(|e| CtfError::ContractCall(format!("Failed to get position ID: {e}")))?;
@@ -262,7 +261,7 @@ impl<P: Provider + Clone> Client<P> {
         let pending_tx = self
             .contract
             .splitPosition(
-                request.collateral_token.0.0.into(),
+                request.collateral_token,
                 request.parent_collection_id,
                 request.condition_id,
                 request.partition.clone(),
@@ -314,7 +313,7 @@ impl<P: Provider + Clone> Client<P> {
         let pending_tx = self
             .contract
             .mergePositions(
-                request.collateral_token.0.0.into(),
+                request.collateral_token,
                 request.parent_collection_id,
                 request.condition_id,
                 request.partition.clone(),
@@ -366,7 +365,7 @@ impl<P: Provider + Clone> Client<P> {
         let pending_tx = self
             .contract
             .redeemPositions(
-                request.collateral_token.0.0.into(),
+                request.collateral_token,
                 request.parent_collection_id,
                 request.condition_id,
                 request.index_sets.clone(),
