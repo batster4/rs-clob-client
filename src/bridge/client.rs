@@ -54,11 +54,18 @@ impl Client {
     pub fn new(host: &str) -> Result<Client> {
         let mut headers = HeaderMap::new();
 
+        // Use curl-like User-Agent to avoid Cloudflare blocking
         headers.insert("User-Agent", HeaderValue::from_static("curl/8.7.1"));
         headers.insert("Accept", HeaderValue::from_static("*/*"));
         headers.insert("Connection", HeaderValue::from_static("keep-alive"));
         headers.insert("Content-Type", HeaderValue::from_static("application/json"));
-        let client = ReqwestClient::builder().default_headers(headers).build()?;
+        // Connection pooling for low-latency
+        let client = ReqwestClient::builder()
+            .default_headers(headers)
+            .pool_max_idle_per_host(5)
+            .pool_idle_timeout(std::time::Duration::from_secs(90))
+            .tcp_keepalive(std::time::Duration::from_secs(30))
+            .build()?;
 
         Ok(Self {
             host: Url::parse(host)?,

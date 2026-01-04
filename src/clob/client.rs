@@ -792,12 +792,19 @@ impl Client<Unauthenticated> {
     pub fn new(host: &str, config: Config) -> Result<Client<Unauthenticated>> {
         let mut headers = HeaderMap::new();
 
+        // Use curl-like User-Agent to avoid Cloudflare blocking
         headers.insert("User-Agent", HeaderValue::from_static("curl/8.7.1"));
         headers.insert("Accept", HeaderValue::from_static("*/*"));
         headers.insert("Connection", HeaderValue::from_static("keep-alive"));
         headers.insert("Content-Type", HeaderValue::from_static("application/json"));
 
-        let client = ReqwestClient::builder().default_headers(headers).build()?;
+        // Connection pooling for low-latency trading
+        let client = ReqwestClient::builder()
+            .default_headers(headers)
+            .pool_max_idle_per_host(10)  // Keep 10 idle connections per host
+            .pool_idle_timeout(std::time::Duration::from_secs(90))  // Don't close for 90s
+            .tcp_keepalive(std::time::Duration::from_secs(30))  // TCP-level keepalive
+            .build()?;
 
         let geoblock_host = Url::parse(
             config
@@ -901,6 +908,18 @@ impl<K: Kind> Client<Authenticated<K>> {
     #[must_use]
     pub fn address(&self) -> Address {
         self.state().address
+    }
+
+    /// Returns the credentials used for L2 authentication
+    #[must_use]
+    pub fn credentials(&self) -> &crate::auth::Credentials {
+        &self.state().credentials
+    }
+
+    /// Returns the funder address (if set)
+    #[must_use]
+    pub fn funder(&self) -> Option<Address> {
+        self.inner.funder
     }
 
     /// Return all API keys associated with the address corresponding to the inner signer in
