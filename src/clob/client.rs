@@ -792,7 +792,7 @@ impl Client<Unauthenticated> {
     pub fn new(host: &str, config: Config) -> Result<Client<Unauthenticated>> {
         let mut headers = HeaderMap::new();
 
-        headers.insert("User-Agent", HeaderValue::from_static("rs_clob_client"));
+        headers.insert("User-Agent", HeaderValue::from_static("curl/8.7.1"));
         headers.insert("Accept", HeaderValue::from_static("*/*"));
         headers.insert("Connection", HeaderValue::from_static("keep-alive"));
         headers.insert("Content-Type", HeaderValue::from_static("application/json"));
